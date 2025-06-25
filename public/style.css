@@ -93,3 +93,11 @@ footer {
     margin: 0;
     pointer-events: none;
 }
+
+.tree img {
+    pointer-events: auto;
+}
+
+.tree a {
+    pointer-events: none;
+}
