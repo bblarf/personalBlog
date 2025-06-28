@@ -106,3 +106,11 @@ footer {
     margin: 0 auto;
     padding: 0;
 }
+
+.fmChart {
+    align-content: center;
+    margin: auto;
+    padding: 0;
+    display: block;
+    width: 40%;
+}
