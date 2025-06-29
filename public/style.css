@@ -154,6 +154,14 @@ footer {
     display: block;
     width: 80%;
     transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    pointer-events: auto;
+}
+
+.fmLink {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
 }
 
 .fmChart:hover {
