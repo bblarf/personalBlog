@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Horsele</title>
+  <link href="style.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      padding-top: 40px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .tile {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #3a3a3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: #121213;
+      color: white;
+    }
+
+    .tile.filled {
+      border-color: #565758;
+    }
+
+    .correct {
+      background-color: #538d4e;
+      border-color: #538d4e;
+    }
+
+    .present {
+      background-color: #b59f3b;
+      border-color: #b59f3b;
+    }
+
+    .absent {
+      background-color: #3a3a3c;
+      border-color: #3a3a3c;
+    }
+
+    .keyboard {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 600px;
+    }
+
+    .key {
+      width: 40px;
+      height: 58px;
+      margin: 4px;
+      border: none;
+      background-color: #818384;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .key.enter {
+      width: 80px;
+    }
+
+    .key.delete {
+      width: 80px;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+    <header>
+          <a href="index.html" class="title"><h1>saabrina</h1></a>
+          <h4 class="pronouns">she/her</h4>
+          <ul class="le-nav">
+            <li class="le-nav-item">
+              <a href="home.html" class="le-nav-link">home</a>
+            </li>
+            <li class="le-nav-item">
+              <a href="shows.html" class="le-nav-link">dj shows</a>
+            </li>
+            <li class="le-nav-item">
+              <a href="music.html" class="le-nav-link">music</a>
+            </li>
+            <li class="le-nav-item">
+              <a href="horse.html" class="le-nav-link">horsele</a>
+            </li>
+          </ul>
+        </header>
+  <h1>Horsele</h1>
+  <div class="board" id="board"></div>
+  <div class="keyboard" id="keyboard"></div>
+  <div class="message" id="message"></div>
+
+  <script>
+    const answer = 'HORSE';
+    const board = document.getElementById('board');
+    const keyboard = document.getElementById('keyboard');
+    const message = document.getElementById('message');
+    const rows = 6;
+    const cols = 5;
+    let currentRow = 0;
+    let currentCol = 0;
+    let guesses = Array.from({ length: rows }, () => Array(cols).fill(''));
+    function createBoard() {
+      for (let r = 0; r < rows; r++) {
+        const row = document.createElement('div');
+        row.className = 'row';
+        for (let c = 0; c < cols; c++) {
+          const tile = document.createElement('div');
+          tile.className = 'tile';
+          tile.id = `tile-${r}-${c}`;
+          row.appendChild(tile);
+        }
+        board.appendChild(row);
+      }
+    }
+    function handleKey(key) {
+      if (message.textContent !== '') return;
+
+      if (key === "ENTER") {
+        if (currentCol === cols) checkGuess();
+        return;
+      }
+      if (key === "DELETE") {
+        if (currentCol > 0) {
+          currentCol--;
+          guesses[currentRow][currentCol] = '';
+          updateTile();
+        }
+        return;
+      }
+      if (/^[A-Z]$/.test(key) && currentCol < cols) {
+        guesses[currentRow][currentCol] = key;
+        currentCol++;
+        updateTile();
+      }
+    }
+    function updateTile() {
+      for (let c = 0; c < cols; c++) {
+        const tile = document.getElementById(`tile-${currentRow}-${c}`);
+        const letter = guesses[currentRow][c];
+        tile.textContent = letter;
+        tile.classList.toggle('filled', letter !== '');
+      }
+    }
+    function checkGuess() {
+      const guess = guesses[currentRow].join('');
+      const answerArray = answer.split('');
+      const result = Array(cols).fill('absent');
+      const letterCount = {};
+      for (let char of answerArray) {
+        letterCount[char] = (letterCount[char] || 0) + 1;
+      }
+      // checks if it is correct first
+      for (let i = 0; i < cols; i++) {
+        if (guesses[currentRow][i] === answer[i]) {
+          result[i] = 'correct';
+          letterCount[answer[i]]--;
+        }
+      }
+      // then checks for present tiles
+      for (let i = 0; i < cols; i++) {
+        const letter = guesses[currentRow][i];
+        if (result[i] === 'correct') continue;
+        if (letterCount[letter]) {
+          result[i] = 'present';
+          letterCount[letter]--;
+        }
+      }
+      // applying styles for the tiles
+      for (let i = 0; i < cols; i++) {
+        const tile = document.getElementById(`tile-${currentRow}-${i}`);
+        tile.classList.add(result[i]);
+      }
+
+      if (guess === answer) {
+        message.textContent = 'yuuuup!';
+      } else if (currentRow === rows - 1) {
+        message.textContent = `the word was ${answer} nimrod`;
+      } else {
+        currentRow++;
+        currentCol = 0;
+      }
+    }
+    // initialize
+    createBoard();
+    // handle keyboard typing
+    document.addEventListener('keydown', (e) => {
+      let key = e.key;
+      if (key === 'Backspace') {
+        handleKey('DELETE');
+      } else if (key === 'Enter') {
+        handleKey('ENTER');
+      } else if (/^[a-zA-Z]$/.test(key)) {
+        handleKey(key.toUpperCase());
+      }
+    });
+  </script>
+</body>
+</html>

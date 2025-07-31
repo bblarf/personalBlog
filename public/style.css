@@ -15,7 +15,7 @@
 body {
     background-color: black;
     color: white;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: 'Gill Sans', 'Gill Sans MT', 'Times New Roman', 'Trebuchet MS', sans-serif;
 }
 
 .tree img {
@@ -110,7 +110,7 @@ footer {
     margin: auto;
     padding: 0;
     display: block;
-    width: 75%;
+    width: 60%;
     pointer-events: auto;
     transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
@@ -148,7 +148,7 @@ footer {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 70%;
+    width: 55%;
     justify-content: center;
     transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
     pointer-events: auto;
