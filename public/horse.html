@@ -65,29 +65,58 @@
     .keyboard {
       margin-top: 30px;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
       max-width: 600px;
     }
 
+    .keyboard-row {
+      display: flex;
+      gap: 6px;
+    }
+
     .key {
-      width: 40px;
       height: 58px;
-      margin: 4px;
+      padding: 0 6px;
+      min-width: 40px;
       border: none;
       background-color: #818384;
       color: white;
       font-weight: bold;
+      font-size: 13px;
       border-radius: 4px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transition: background-color 0.1s;
     }
 
-    .key.enter {
-      width: 80px;
+    .key:hover {
+      background-color: #9a9a9c;
     }
 
-    .key.delete {
-      width: 80px;
+    .key:active {
+      background-color: #6e6e70;
+    }
+
+    .key.wide {
+      min-width: 65px;
+      font-size: 12px;
+    }
+
+    .key.correct {
+      background-color: #538d4e;
+    }
+
+    .key.present {
+      background-color: #b59f3b;
+    }
+
+    .key.absent {
+      background-color: #3a3a3c;
     }
 
     .message {
@@ -130,6 +159,8 @@
     let currentRow = 0;
     let currentCol = 0;
     let guesses = Array.from({ length: rows }, () => Array(cols).fill(''));
+    let keyStates = {}; // Track the state of each key
+
     function createBoard() {
       for (let r = 0; r < rows; r++) {
         const row = document.createElement('div');
@@ -143,6 +174,50 @@
         board.appendChild(row);
       }
     }
+
+    function createKeyboard() {
+      const keyboardLayout = [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'DELETE']
+      ];
+
+      keyboardLayout.forEach(row => {
+        const keyRow = document.createElement('div');
+        keyRow.className = 'keyboard-row';
+        
+        row.forEach(key => {
+          const keyButton = document.createElement('button');
+          keyButton.className = 'key';
+          keyButton.textContent = key === 'DELETE' ? '⌫' : key;
+          keyButton.id = `key-${key}`;
+          
+          if (key === 'ENTER' || key === 'DELETE') {
+            keyButton.classList.add('wide');
+          }
+          
+          keyButton.addEventListener('click', () => handleKey(key));
+          keyRow.appendChild(keyButton);
+        });
+        
+        keyboard.appendChild(keyRow);
+      });
+    }
+
+    function updateKeyboardState(letter, state) {
+      const keyElement = document.getElementById(`key-${letter}`);
+      if (!keyElement) return;
+      
+      // Only update if this is a better state (correct > present > absent)
+      const currentState = keyStates[letter] || '';
+      if (currentState === 'correct') return;
+      if (currentState === 'present' && state === 'absent') return;
+      
+      keyStates[letter] = state;
+      keyElement.classList.remove('correct', 'present', 'absent');
+      keyElement.classList.add(state);
+    }
+
     function handleKey(key) {
       if (message.textContent !== '') return;
 
@@ -164,6 +239,7 @@
         updateTile();
       }
     }
+
     function updateTile() {
       for (let c = 0; c < cols; c++) {
         const tile = document.getElementById(`tile-${currentRow}-${c}`);
@@ -172,6 +248,7 @@
         tile.classList.toggle('filled', letter !== '');
       }
     }
+
     function checkGuess() {
       const guess = guesses[currentRow].join('');
       const answerArray = answer.split('');
@@ -196,10 +273,12 @@
           letterCount[letter]--;
         }
       }
-      // applying styles for the tiles
+      // applying styles for the tiles and keyboard
       for (let i = 0; i < cols; i++) {
         const tile = document.getElementById(`tile-${currentRow}-${i}`);
+        const letter = guesses[currentRow][i];
         tile.classList.add(result[i]);
+        updateKeyboardState(letter, result[i]);
       }
 
       if (guess === answer) {
@@ -211,8 +290,11 @@
         currentCol = 0;
       }
     }
+
     // initialize
     createBoard();
+    createKeyboard();
+    
     // handle keyboard typing
     document.addEventListener('keydown', (e) => {
       let key = e.key;
@@ -225,6 +307,5 @@
       }
     });
   </script>
-  <p>mobile support coming later!</p>
 </body>
 </html>
