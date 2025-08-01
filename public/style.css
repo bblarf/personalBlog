@@ -204,11 +204,15 @@ footer {
     gap: 5px;
     margin: 0 auto;
     justify-self: center;
+    justify-items: center;
+    width: fit-content;
 }
 
 .row {
     display: flex;
     gap: 5px;
+    justify-content: center;
+    align-items: center;
 }
 
 .tile {
@@ -228,10 +232,12 @@ footer {
 @media (min-width: 480px) {
     .board {
         gap: 10px;
+        width: fit-content;
     }
     
     .row {
         gap: 10px;
+        justify-content: center;
     }
     
     .tile {
