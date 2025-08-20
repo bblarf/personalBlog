@@ -144,6 +144,20 @@ footer {
     padding: 0;
 }
 
+.musicImage {
+    display: block;
+    margin: 0 auto;
+    width: 40%;
+    max-width: 400px;
+}
+
+audio {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 400px;
+}
+
 .imageLink {
     padding: 0;
     margin: auto;
