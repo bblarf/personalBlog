@@ -380,20 +380,63 @@ audio {
 }
 
 .twitterPost {
-    width: 80%;
+    width: 40%;
     min-height: 60px;
     display: flex;
     margin: auto;
-    gap: 5px;
+    gap: 8px;
     align-content: center;
     border: 1px solid white;
-    border-radius: 10%;
+    border-radius: 12px;
     background-color: #6e6e70;
+    flex-wrap: wrap;
+    padding: 12px;
 }
 
 .profilePic {
-    display: flex;
-    align-content: center;
-    border-radius: 40%;
-    width: 10%;
+    display: block;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: 0 0 48px;
+}
+
+.displayName {
+    margin: 2px 0 0 0;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.userName {
+    margin: 5px 0 10px 0;
+    font-size: 0.95rem;
+    color: #c7c7c7;
+    letter-spacing: 0.2px;
+}
+
+.postContent {
+    flex-basis: 100%;
+    margin: -30px 0 0 55px;
+    font-size: 1.2rem;
+    color: #eeeeee;
+    line-height: 1.5;
+}
+
+.postImage {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    object-fit: cover;
+}
+
+.twitterDesc {
+    color: gray;
+    text-decoration: underline;
+    text-align: center;
+    max-width: 40%;
+    margin: 0 auto;
+    padding: 0;
 }
