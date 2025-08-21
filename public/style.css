@@ -364,3 +364,22 @@ footer {
 .horseleTitle {
     text-align: center;
 }
+
+.twitterPost {
+    width: 80%;
+    min-height: 60px;
+    display: flex;
+    margin: auto;
+    gap: 5px;
+    align-content: center;
+    border: 1px solid white;
+    border-radius: 10%;
+    background-color: #6e6e70;
+}
+
+.profilePic {
+    display: flex;
+    align-content: center;
+    border-radius: 40%;
+    width: 10%;
+}
