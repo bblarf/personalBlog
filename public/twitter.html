@@ -30,26 +30,103 @@
     </header>
     <main>
         <h1 class="horseleTitle">twitter if it was only me</h1>
-        <h2 class="twitterDesc">my twitter got deleted and i'm mad about that so here's the blog section finally</h1>
+        <h2 class="twitterDesc">my twitter got deleted and i'm mad about that so here's the blog section finally</h2>
         <br>
-        <div class="twitterPost">
+        <div class="twitterPost" data-post-id="1">
             <img src="twitterAssets/pfp.jpeg" class="profilePic">
             <p class="displayName">sabrina :3</p>
             <p class="userName">@bblarf</p>
             <p class="postContent">they thought they could get rid of me #twitter2</p>
+            <div class="likeSection">
+                <button class="likeButton" onclick="toggleLike(1)">
+                    <span class="likeIcon">♡</span>
+                    <span class="likeCount" id="likeCount-1">0</span>
+                </button>
+            </div>
         </div>
         <br>
-        <div class="twitterPost">
+        <div class="twitterPost" data-post-id="2">
             <img src="twitterAssets/pfp.jpeg" class="profilePic">
             <p class="displayName">sabrina :3</p>
             <p class="userName">@bblarf</p>
             <p class="postContent">this is a test post.</p>
             <img src="twitterAssets/subway.jpg" class="postImage">
+            <div class="likeSection">
+                <button class="likeButton" onclick="toggleLike(2)">
+                    <span class="likeIcon">♡</span>
+                    <span class="likeCount" id="likeCount-2">0</span>
+                </button>
+            </div>
         </div>
         <br>
     </main>
     <footer>
         <p>made by sabrina &copy;2025</p>
     </footer>
+
+    <script>
+        // Initialize likes from localStorage or set defaults
+        let likes = JSON.parse(localStorage.getItem('twitterLikes')) || {};
+        let userLikedPosts = JSON.parse(localStorage.getItem('userLikedPosts')) || {};
+
+        // Function to update like count display
+        function updateLikeDisplay(postId) {
+            const likeCountElement = document.getElementById(`likeCount-${postId}`);
+            const likeIcon = likeCountElement.previousElementSibling;
+            
+            if (likeCountElement) {
+                likeCountElement.textContent = likes[postId] || 0;
+                
+                // Update heart icon based on whether user has liked
+                if (userLikedPosts[postId]) {
+                    likeIcon.textContent = '♥';
+                    likeIcon.style.color = '#ff6b6b';
+                } else {
+                    likeIcon.textContent = '♡';
+                    likeIcon.style.color = '#ffffff';
+                }
+            }
+        }
+
+        // Function to toggle like
+        function toggleLike(postId) {
+            if (!likes[postId]) {
+                likes[postId] = 0;
+            }
+            
+            if (userLikedPosts[postId]) {
+                // Unlike
+                likes[postId]--;
+                userLikedPosts[postId] = false;
+            } else {
+                // Like
+                likes[postId]++;
+                userLikedPosts[postId] = true;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('twitterLikes', JSON.stringify(likes));
+            localStorage.setItem('userLikedPosts', JSON.stringify(userLikedPosts));
+            
+            // Update display
+            updateLikeDisplay(postId);
+            
+            // Add animation
+            const likeButton = document.querySelector(`[data-post-id="${postId}"] .likeButton`);
+            likeButton.classList.add('liked');
+            setTimeout(() => {
+                likeButton.classList.remove('liked');
+            }, 300);
+        }
+
+        // Initialize all like displays on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const posts = document.querySelectorAll('.twitterPost');
+            posts.forEach(post => {
+                const postId = post.getAttribute('data-post-id');
+                updateLikeDisplay(postId);
+            });
+        });
+    </script>
 </body>
 </html>
